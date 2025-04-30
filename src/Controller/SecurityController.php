@@ -12,7 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse as HttpFoundationJsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as HasherUserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Serializer\SerializerInterface as SerializerSerializerInterface;
+ 
+
 
 #[Route('/api',name:'app_api_')]
 final class SecurityController extends AbstractController
@@ -35,6 +38,21 @@ final class SecurityController extends AbstractController
             Response::HTTP_CREATED
         );
     }
-} 
+
+//https://symfony.com/doc/current/security.html#json-login
+    #[Route('/login', name: 'login', methods: 'POST')]
+    public function login(#[CurrentUser] ?User $user): JsonResponse
+    {
+        if (null === $user) {
+            return new JsonResponse(['message' => 'Missing credentials'], Response::HTTP_UNAUTHORIZED);
+        }
+        return new JsonResponse([
+            'user'  => $user->getUserIdentifier(),
+            'apiToken' => $user->getApiToken(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
+}
+
 
  
