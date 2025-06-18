@@ -28,7 +28,7 @@ final class SecurityController extends AbstractController
     {
     }
  
-    #[Route('/registration', name: 'registration', methods: ['POST'])]
+    #[Route('/registration', name: 'registration', methods: ['POST','OPTION'])]
 #[OA\Post(
     path: "/api/registration",
     summary: "Inscription d'un nouvel utilisateur",
